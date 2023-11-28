@@ -1,34 +1,34 @@
-## Installation - Nutzen des Skripts
+## Installation
 
-# 1. SSH-Passwort-Abfrage installieren
+# 1. Install sshpass
 
     sudo apt install sshpass
 
-# 2. Skript herunterladen
+# 2. Download Script
 
     wget https://raw.githubusercontent.com/JulFoii/MailcowCertCopyScript/main/Mailcow_Zertifikate_Kopieren.sh
 
-# 3. Variablen in der Datei anpassen
+# 3. Customize variables in the file
 
-    Öffne die Datei mit einem Texteditor (z.B., nano Mailcow_Zertifikate_Kopieren.sh)
-    Passe die Variablen entsprechend deiner Konfiguration an
-    Speichere und schließe die Datei
+    Open the file with a text editor (nano Mailcow_Zertifikate_Kopieren.sh)
+    Adjust the variables according to your configuration
+    Save and Close the file
 
-# 4. Skript ausführbar machen
+# 4. Make the script executable
 
     chmod +x Mailcow_Zertifikate_Kopieren.sh
 
-# 5. Skript ausführen
+# 5. Execute the script
 
     ./Mailcow_Zertifikate_Kopieren.sh
 
-## Cronjob einrichten, um das Skript automatisch auszuführen
+## Set up a cronjob to run the script automatically
 
-Füge die folgende Zeile zur Crontab hinzu
-Öffne die Crontab mit dem Befehl:
+Add the following line to the crontab
+Open the crontab with the command:
 
     crontab -e
 
-Füge die Zeile ein, speichere und schließe die Datei
+Insert the line, save and close the file
 
     0 1 1,3,5,7,9,11 * * bash /pfad/zum/skript/Mailcow_Zertifikate_Kopieren.sh >/dev/null 2>&1
