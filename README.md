@@ -31,4 +31,4 @@ Open the crontab with the command:
 
 Insert the line, save and close the file
 
-    0 1 1,3,5,7,9,11 * * bash /path/to/script/copy_mailcow_cert.sh >/dev/null 2>&1
+    0 1 * */2 * bash /path/to/script/copy_mailcow_cert >/dev/null 2>&1
