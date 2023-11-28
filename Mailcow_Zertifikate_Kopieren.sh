@@ -20,7 +20,7 @@ FILES=("cert.pem" "chain.pem" "fullchain.pem" "privkey.pem")
 
 ## Beim SCP-Befehl den Benutzer ändern falls erforderlich
 
-USER="root"
+USER="BENUTZER_DER_ZIELMASCHINE"
 
 # SSH-Passwort
 
