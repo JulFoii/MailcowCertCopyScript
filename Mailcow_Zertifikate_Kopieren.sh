@@ -1,31 +1,45 @@
 #!/bin/bash
 
-# Quellverzeichnis auf der ersten Maschine wo die Zertifikate sind
-SOURCE_DIR="/pfad/auf/der/Quellmaschine"
+# Quellverzeichnis auf der ersten Maschine
 
-# Zielverzeichnis auf der zwiten Maschine, wo die Zertifikate kopiert werden sollen
-TARGET_DIR="/pfad/auf/der/Zielmaschine"
+SOURCE_DIR="/pfad/quellverzeichnis"
+
+# Zielverzeichnis auf der zweiten Maschine
+
+TARGET_DIR="/pfad/zielmaschine"
 
 # IP-Adresse der Zielmaschine
-TARGET_IP="1.1.1.1"
+
+TARGET_IP="IP_DER_ZIELMASCHINE"
 
 # Liste der zu kopierenden Dateien
+
 FILES=("cert.pem" "chain.pem" "fullchain.pem" "privkey.pem")
 
 # SSH-Verbindung und Kopieren der Dateien
 
 ## Beim SCP-Befehl den Benutzer ändern falls erforderlich
 
-BENUTZER="root"
+USER="root"
+
+# SSH-Passwort
+
+PASSWORD="DEIN_PASSWORT"
+
+echo Kopiere Dateien zur Zielmaschine in das angegebene Verzeichnis....
+
+# Kopieren der Dateien mit sshpass
 
 for file in "${FILES[@]}"; do
-    scp "$SOURCE_DIR/$file" "$BENUTZER@$TARGET_IP:$TARGET_DIR"
+    sshpass -p "$PASSWORD" scp "$SOURCE_DIR/$file" "$USER@$TARGET_IP:$TARGET_DIR"
 done
 
-# Neustart der relevanten Docker-Container
+echo Kopieren der Dateien DONE ✓
 
-postfix_c=$(docker ps -qaf name=postfix-mailcow)
-dovecot_c=$(docker ps -qaf name=dovecot-mailcow)
-nginx_c=$(docker ps -qaf name=nginx-mailcow)
+# Neustart der relevanten Docker-Container auf der Zielmaschine
 
-docker restart ${postfix_c} ${dovecot_c} ${nginx_c}
+echo Starte Docker-Container neu.....
+
+sshpass -p "$PASSWORD" ssh "$USER@$TARGET_IP" "docker restart \$(docker ps -qaf name=postfix-mailcow) \$(docker ps -qaf name=dovecot-mailcow) \$(docker ps -qaf name=nginx-mailcow)"
+
+echo Neustart von Docker-Containern DONE ✓
