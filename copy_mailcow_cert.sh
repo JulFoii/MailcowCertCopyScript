@@ -1,31 +1,23 @@
 #!/bin/bash
 
-# Verzeichnisse und Dateinamen
+source_dir="/dir/on/sourcevm"
 
-source_dir="/verzeichnis/quellmaschine"
+target_ip="target-ip"
 
-target_ip="IP-Zielmaschine"
-
-target_dir="/ziel/auf/zielmaschine"
+target_dir="/dir/on/targetvm/"
 
 cert_target_name="cert.pem"
 
 key_target_name="key.pem"
 
-target_user="dein_benutzername"
+target_user="target-user"
 
-# Kopiere und benenne die Dateien auf der Ziel-VM um
+# copy the files to the target with scp
 
-echo "Kopiere Dateien zur Ziel-VM..."
+scp "${source_dir}/fullchain.pem" "${target_user}@${target_ip}:${target_dir}/${cert_target_name}"
 
-scp "${source_dir}/fullchain.pem" "${source_dir}/privkey.pem" "${target_user}@${target_ip}:${target_dir}"
+scp "${source_dir}/privkey.pem" "${target_user}@${target_ip}:${target_dir}/${key_target_name}"
 
-echo "Dateien erfolgreich kopiert."
-
-# Neustart der Container auf der Ziel-VM
-
-echo "Neustart der Container auf der Ziel-VM..."
+# restart docker container on target-vm
 
 ssh "${target_user}@${target_ip}" "docker restart \$(docker ps -qaf name=postfix-mailcow) \$(docker ps -qaf name=dovecot-mailcow) \$(docker ps -qaf name=nginx-mailcow)"
-
-echo "Container erfolgreich neugestartet."
