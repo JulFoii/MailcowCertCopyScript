@@ -1,45 +1,31 @@
 #!/bin/bash
 
-# Quellverzeichnis auf der ersten Maschine
+# Verzeichnisse und Dateinamen
 
-SOURCE_DIR="/pfad/quellverzeichnis"
+source_dir="/verzeichnis/quellmaschine"
 
-# Zielverzeichnis auf der zweiten Maschine
+target_ip="IP-Zielmaschine"
 
-TARGET_DIR="/pfad/zielmaschine"
+target_dir="/ziel/auf/zielmaschine"
 
-# IP-Adresse der Zielmaschine
+cert_target_name="cert.pem"
 
-TARGET_IP="IP_DER_ZIELMASCHINE"
+key_target_name="key.pem"
 
-# Liste der zu kopierenden Dateien
+target_user="dein_benutzername"
 
-FILES=("cert.pem" "chain.pem" "fullchain.pem" "privkey.pem")
+# Kopiere und benenne die Dateien auf der Ziel-VM um
 
-# SSH-Verbindung und Kopieren der Dateien
+echo "Kopiere Dateien zur Ziel-VM..."
 
-## Beim SCP-Befehl den Benutzer ändern falls erforderlich
+scp "${source_dir}/fullchain.pem" "${source_dir}/privkey.pem" "${target_user}@${target_ip}:${target_dir}"
 
-USER="BENUTZER_DER_ZIELMASCHINE"
+echo "Dateien erfolgreich kopiert."
 
-# SSH-Passwort
+# Neustart der Container auf der Ziel-VM
 
-PASSWORD="DEIN_PASSWORT"
+echo "Neustart der Container auf der Ziel-VM..."
 
-echo Kopiere Dateien zur Zielmaschine in das angegebene Verzeichnis....
+ssh "${target_user}@${target_ip}" "docker restart \$(docker ps -qaf name=postfix-mailcow) \$(docker ps -qaf name=dovecot-mailcow) \$(docker ps -qaf name=nginx-mailcow)"
 
-# Kopieren der Dateien mit sshpass
-
-for file in "${FILES[@]}"; do
-    sshpass -p "$PASSWORD" scp "$SOURCE_DIR/$file" "$USER@$TARGET_IP:$TARGET_DIR"
-done
-
-echo Kopieren der Dateien DONE ✓
-
-# Neustart der relevanten Docker-Container auf der Zielmaschine
-
-echo Starte Docker-Container neu.....
-
-sshpass -p "$PASSWORD" ssh "$USER@$TARGET_IP" "docker restart \$(docker ps -qaf name=postfix-mailcow) \$(docker ps -qaf name=dovecot-mailcow) \$(docker ps -qaf name=nginx-mailcow)"
-
-echo Neustart von Docker-Containern DONE ✓
+echo "Container erfolgreich neugestartet."
