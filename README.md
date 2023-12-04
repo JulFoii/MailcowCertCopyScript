@@ -1,24 +1,20 @@
 ## Installation
 
-# 1. Install sshpass
-
-    sudo apt install sshpass
-
-# 2. Download Script
+# 1. Download Script
 
     wget https://raw.githubusercontent.com/JulFoii/MailcowCertCopyScript/main/copy_mailcow_cert.sh
 
-# 3. Customize variables in the file
+# 2. Customize variables in the file
 
     Open the file with a text editor (nano copy_mailcow_cert.sh)
     Adjust the variables according to your configuration
     Save and Close the file
 
-# 4. Make the script executable
+# 3. Make the script executable
 
     chmod +x copy_mailcow_cert.sh
 
-# 5. Execute the script
+# 4. Execute the script
 
     ./copy_mailcow_cert.sh
 
@@ -31,4 +27,8 @@ Open the crontab with the command:
 
 Insert the line, save and close the file
 
-    0 1 * */2 * bash /path/to/script/copy_mailcow_cert >/dev/null 2>&1
+    0 1 * */2 * /path/to/script/copy_mailcow_cert.sh
+
+The script is executed with the crontab entry on the first day of every second month
+
+You can customize the cronjob to your liking
